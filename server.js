@@ -6,7 +6,7 @@ const path = require("path");
 const Workout = require("./models/workoutModel");
 const { response } = require("express");
 
-const PORT = 3001 || process.env.PORT;
+const PORT = process.env.PORT || 3001;
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/userdb", {
 	useNewUrlParser: true,
 });
