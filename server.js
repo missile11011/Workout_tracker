@@ -3,11 +3,11 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const router = require("express").Router();
 const path = require("path");
-const Workout = require("./models/workoutModel");
+const db = require("./models");
 const { response } = require("express");
-
+require("dotenv")
 const PORT = process.env.PORT || 3001;
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/userdb", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/wokrout", {
 	useNewUrlParser: true,
 });
 
@@ -29,21 +29,45 @@ app.get("/stats", (req, res) => {
 	res.sendFile(path.join(__dirname,"./public/stats.html"))
 });
 
-router.put("/api/workouts", (req,res) =>{
-	Workout.update({
-		type: req.body.type,
-		name: req.body.name,
-		duration: req.body.duration,
-		weight: req.body.weight,
-		reps: req.body.reps,
-		sets: req.body.sets
-	},
-	{
-		where:{_id: req.body._id}
+app.get("/api/workouts", (req,res) =>{
+	db.Workout.find({})
+	.then(data =>{
+		res.json(data);
 	})
-	.then((update)=>{
-		res.json(update)
+	.catch(err => {
+		res.json(err);
 	})
+})
+app.post("/api/workouts",({ body },res) => {
+	db.Workout.create(body)
+	.then(({ _id }) => db.User.findOneAndUpdate({}, { $push: { notes: _id } }, { new: true }))
+    .then(dbUser => {
+        res.json(dbUser);
+    })
+    .catch(err => {
+        res.json(err);
+    });
+})
+app.put("api/workout/:id",({params}, res) => {
+	db.Workout.update(
+		{
+			_id: mongojs.ObjectId(params.id)
+		},
+		{
+			$set: {
+				read: false
+			}
+		},
+		(error, edited) => {
+			if (error) {
+				console.log(error);
+				res.send(error);
+			} else {
+				console.log(edited);
+				res.send(edited);
+			}
+		}
+	)
 })
 
 app.listen(3001, () => {
