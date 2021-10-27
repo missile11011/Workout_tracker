@@ -9,6 +9,7 @@ require("dotenv")
 const PORT = process.env.PORT || 3001;
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
 	useNewUrlParser: true,
+	useUnifiedTopology: true,
 });
 
 const app = express();
@@ -30,7 +31,8 @@ app.get("/stats", (req, res) => {
 	res.sendFile(path.join(__dirname,"./public/stats.html"))
 });
 
-app.use(require("./routes/index"));
+app.use(require("./routes"));
+
 app.listen(3001, () => {
 	console.log(`App running on port http://localhost:${PORT}!`);
 });
