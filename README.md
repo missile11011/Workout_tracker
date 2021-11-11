@@ -14,4 +14,4 @@ This web application was built using the following programming language, and too
 ## Contact
 Misael Reyes - misaelrey@gmail.com
 
-Project Link: [https://dry-harbor-79395.herokuapp.com/](https://dry-harbor-79395.herokuapp.com/)
+Project Link: [https://workout-79395.herokuapp.com/](https://workout-79395.herokuapp.com/)
